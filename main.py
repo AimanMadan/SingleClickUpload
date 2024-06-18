@@ -128,21 +128,41 @@ def upload_track(driver, wav, stems):
         print(f"Uploaded stems file")
     else:
         print("No stems found. Skipping stem upload.")
+        
+     # Wait for the play button to turn blue (example of checking for a specific class change)
+    def is_play_button_blue(driver):
+        play_button = driver.find_element(By.XPATH, "//*[@id='cdk-drop-list-2']/studio-form-file-box/div/div/div[2]/studio-button-play-item/div/bs-square-button")
+        return 'ng-star-inserted' in play_button.get_attribute('class')  # Change 'blue-class' to the actual class name
 
+    wait.until(is_play_button_blue)
+    print("Done creating a tagged audio")
+    
     # Sleep to observe the final state
     time.sleep(50)  # Sleep for 10 seconds
 
-# Function to publish track
-"""def publish_track(driver):
+
+"""# Function to add basic info and Metadata
+def basic info:
+    #check if user wants to add basic info 
+    if yes
+        #fill title 
+        #fill description
+    
+    """
+    
+    
+"""# Function to publish track
+def publish_track(driver):
     
     # Wait for the "Publish" button to be clickable using the provided XPath
-    publish_button_input = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='uppy-drag-drop']/div/button/input")))
+    publish_button_input = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/div/div/bs-square-button[2]/button")))
     print("Publish input located, attempting to Publish file...")
     
     
     # Sleep to observe the final state
-    time.sleep(50)  # Sleep for 10 seconds
-    """
+    time.sleep(50)  # Sleep for 10 seconds"""
+    
+
 try:
     # Get email and password from Login.txt
     email, password = get_credentials('Login.txt')
