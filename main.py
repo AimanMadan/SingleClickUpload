@@ -57,7 +57,6 @@ def beatstars_sign_in(driver, email, password):
     # Enter the password
     password_input.send_keys(password)
 
-
     # Check if password was entered correctly
     entered_password = password_input.get_attribute('value')
     if entered_password != password:
@@ -68,17 +67,16 @@ def beatstars_sign_in(driver, email, password):
     print("Continue button located, attempting to click...")
     # Click the "Continue" button
     continue_button.click()
-    
+
 # Function to get .wav, stem files (.zip or .rar), and artwork (.jpeg or .jpg or.png) files
 def get_files(directory):
     wav = glob.glob(os.path.join(directory, "*.wav"))
     stems = glob.glob(os.path.join(directory, "*.zip")) + glob.glob(os.path.join(directory, "*.rar"))
     artwork = glob.glob(os.path.join(directory, "*.jpeg")) + glob.glob(os.path.join(directory, "*.jpg")) + glob.glob(os.path.join(directory, "*.png"))
-    title = os.path.splitext(os.path.basename(wav[0]))[0] if wav else None
+    title = os.path.splitext(os.path.basename(directory, "*.wav")) if wav else None
     return wav, stems, artwork, title
-   
 
-#Upload a track with the attached files(Must have .wav at least)
+# Upload a track with the attached files (Must have .wav at least)
 def upload_track(driver, wav, stems):
     wait = WebDriverWait(driver, 10)
     
@@ -104,7 +102,6 @@ def upload_track(driver, wav, stems):
     drag_and_drop_input = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='uppy-drag-drop']/div/button/input")))
     print("Drag & Drop input located, attempting to upload file...")
     
-    
     # Upload the .wav file
     drag_and_drop_input.send_keys(wav)
     print(f"Uploaded wav file")
@@ -122,15 +119,16 @@ def upload_track(driver, wav, stems):
         print("Drag & Drop input for stems located, attempting to upload file...")
 
         # Upload the stem file
-        drag_and_drop_input_stems.send_keys(stems) 
+        drag_and_drop_input_stems.send_keys(stems)
         print(f"Uploaded stems file")
     else:
         print("No stems found. Skipping stem upload.")
     
-    # Sleep to wait for the upload to finish #NEED A BETTER SOLUTION THAN WAIT!!! :( HELP HELP HELP
+    # Sleep to wait for the upload to finish #NEED A BETTER SOLUTION THAN WAIT!!! :(
     print("Waiting for the upload process to complete...")
     time.sleep(10)  # Sleep for 10 seconds
 
+# Function to add basic info and Metadata
 def basic_info(driver, title):
     wait = WebDriverWait(driver, 10)
     
@@ -152,14 +150,13 @@ def basic_info(driver, title):
     print(f"Entered track title: {title}")
     
     time.sleep(10)  # Sleep for 10 seconds
-    
 
 try:
     # Get email and password from Login.txt
     email, password = get_credentials('Login.txt')
     
     # Get .wav, stem, and artwork files from the specified directory
-    wav, stems, artwork, title = get_files('C:/BeatStarsSingleClick/Files To Upload') #Change Directory to the Projects directory
+    wav, stems, artwork, title = get_files('C:/Users/aiman/Documents/BeatStarsSingleClick/Files to upload') 
     
     # Call the login function
     beatstars_sign_in(driver, email, password)
@@ -167,9 +164,9 @@ try:
     # Call the function to upload the track
     upload_track(driver, wav, stems)
     
-    #call the function to fill basic info
-    basic_info(driver,title)
-    
-   
+    # Call the function to fill basic info
+    basic_info(driver, title)
+
 except Exception as e:
     print(f"An error occurred: {e}")
+
