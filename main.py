@@ -159,7 +159,7 @@ try:
     email, password = get_credentials('Login.txt')
     
     # Get .wav, stem, and artwork files from the specified directory
-    wav, stems, artwork, title = get_files('C:/Users/aiman/Documents/BeatStarsSingleClick/Files To Upload') 
+    wav, stems, artwork, title = get_files('C:/BeatStarsSingleClick/Files To Upload') #Change Directory to the Projects directory
     
     # Call the login function
     beatstars_sign_in(driver, email, password)
