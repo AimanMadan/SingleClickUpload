@@ -73,7 +73,7 @@ def get_files(directory):
     wav = glob.glob(os.path.join(directory, "*.wav"))
     stems = glob.glob(os.path.join(directory, "*.zip")) + glob.glob(os.path.join(directory, "*.rar"))
     artwork = glob.glob(os.path.join(directory, "*.jpeg")) + glob.glob(os.path.join(directory, "*.jpg")) + glob.glob(os.path.join(directory, "*.png"))
-    title = os.path.splitext(os.path.basename(directory, "*.wav")) if wav else None
+    title = os.path.splitext(os.path.basename(wav[0]))[0] if wav else None
     return wav, stems, artwork, title
 
 # Upload a track with the attached files (Must have .wav at least)
@@ -156,7 +156,7 @@ try:
     email, password = get_credentials('Login.txt')
     
     # Get .wav, stem, and artwork files from the specified directory
-    wav, stems, artwork, title = get_files('C:/Users/aiman/Documents/BeatStarsSingleClick/Files to upload') 
+    wav, stems, artwork, title = get_files('C:/Users/aiman/Documents/BeatStarsSingleClick/Files to upload') #Change Directory!!
     
     # Call the login function
     beatstars_sign_in(driver, email, password)
@@ -169,4 +169,6 @@ try:
 
 except Exception as e:
     print(f"An error occurred: {e}")
+
+
 
