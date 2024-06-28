@@ -74,15 +74,13 @@ def get_files(directory):
     wav = glob.glob(os.path.join(directory, "*.wav"))
     stems = glob.glob(os.path.join(directory, "*.zip")) + glob.glob(os.path.join(directory, "*.rar"))
     artwork = glob.glob(os.path.join(directory, "*.jpeg")) + glob.glob(os.path.join(directory, "*.jpg")) + glob.glob(os.path.join(directory, "*.png"))
-    
-    if not wav:
-        raise FileNotFoundError("No .wav files found in the specified directory.")
-    
-    return wav, stems, artwork
-    
+    title = os.path.splitext(os.path.basename(wav[0]))[0] if wav else None
+    return wav, stems, artwork, title
+   
+
 #Upload a track with the attached files(Must have .wav at least)
 def upload_track(driver, wav, stems):
-    wait = WebDriverWait(driver, 50)
+    wait = WebDriverWait(driver, 10)
     
     # Wait for the "Create +" button to be clickable using the provided XPath
     create_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='app-body']/mp-root/mp-main-menu-top-nav/header/div/bs-container-grid[1]/div/div[3]/div/bs-menu-more-options/div/bs-square-button/button")))
@@ -128,39 +126,32 @@ def upload_track(driver, wav, stems):
         print(f"Uploaded stems file")
     else:
         print("No stems found. Skipping stem upload.")
-        
-     # Wait for the play button to turn blue (example of checking for a specific class change)
-    def is_play_button_blue(driver):
-        play_button = driver.find_element(By.XPATH, "//*[@id='cdk-drop-list-2']/studio-form-file-box/div/div/div[2]/studio-button-play-item/div/bs-square-button")
-        return 'ng-star-inserted' in play_button.get_attribute('class')  # Change 'blue-class' to the actual class name
+    
+    # Sleep to wait for the upload to finish #NEED A BETTER SOLUTION THAN WAIT!!! :(
+    print("Waiting for the upload process to complete...")
+    time.sleep(10)  # Sleep for 10 seconds
 
-    wait.until(is_play_button_blue)
-    print("Done creating a tagged audio")
+def basic_info(driver, title):
+    wait = WebDriverWait(driver, 10)
     
-    # Sleep to observe the final state
-    time.sleep(50)  # Sleep for 10 seconds
+    # Use the full XPath to locate the "Basic Info" tab
+    basic_info_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/mat-tab-group/mat-tab-header/div/div/div/div[2]")))
+    print("Basic Info tab located, attempting to click...")
+    basic_info_tab.click()
+    print("Filling Basic Info...")
+    
+    # Use the full XPath to locate the title input
+    title_input = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[2]/div/div[1]/bs-text-input/input")))
+    print(f"Located title input with placeholder: {title_input.get_attribute('placeholder')}")
+    
+    # Clear the input field before entering text
+    title_input.clear()
 
-
-"""# Function to add basic info and Metadata
-def basic info:
-    #check if user wants to add basic info 
-    if yes
-        #fill title 
-        #fill description
+    # Enter the title
+    title_input.send_keys(title)
+    print(f"Entered track title: {title}")
     
-    """
-    
-    
-"""# Function to publish track
-def publish_track(driver):
-    
-    # Wait for the "Publish" button to be clickable using the provided XPath
-    publish_button_input = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/div/div/bs-square-button[2]/button")))
-    print("Publish input located, attempting to Publish file...")
-    
-    
-    # Sleep to observe the final state
-    time.sleep(50)  # Sleep for 10 seconds"""
+    time.sleep(10)  # Sleep for 10 seconds
     
 
 try:
@@ -168,7 +159,7 @@ try:
     email, password = get_credentials('Login.txt')
     
     # Get .wav, stem, and artwork files from the specified directory
-    wav, stems, artwork = get_files('C:/Users/aiman/Documents/BeatStarsSingleClick/Files To Upload') 
+    wav, stems, artwork, title = get_files('C:/Users/aiman/Documents/BeatStarsSingleClick/Files To Upload') 
     
     # Call the login function
     beatstars_sign_in(driver, email, password)
@@ -176,9 +167,10 @@ try:
     # Call the function to upload the track
     upload_track(driver, wav, stems)
     
-    # Call the function to publish the track
-    #publish_track(driver)
+    #call the function to fill basic info
+    basic_info(driver,title)
     
+   
 finally:
     # Quit the driver
     driver.quit()
