@@ -171,6 +171,5 @@ try:
     basic_info(driver,title)
     
    
-finally:
-    # Quit the driver
-    driver.quit()
+except Exception as e:
+    print(f"An error occurred: {e}")
