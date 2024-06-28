@@ -127,7 +127,7 @@ def upload_track(driver, wav, stems):
     else:
         print("No stems found. Skipping stem upload.")
     
-    # Sleep to wait for the upload to finish #NEED A BETTER SOLUTION THAN WAIT!!! :(
+    # Sleep to wait for the upload to finish #NEED A BETTER SOLUTION THAN WAIT!!! :( HELP HELP HELP
     print("Waiting for the upload process to complete...")
     time.sleep(10)  # Sleep for 10 seconds
 
