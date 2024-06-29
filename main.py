@@ -149,7 +149,19 @@ def basic_info(driver, title):
     title_input.send_keys(title)
     print(f"Entered track title: {title}")
     
+# Function to add Metadata
+def meta_data(driver, artwork):
+    
+    wait = WebDriverWait(driver, 10)
+    
+    # Use the full XPath to locate the "Metadata" tab
+    basic_info_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/mat-tab-group/mat-tab-header/div/div/div/div[3]")))
+    print("Metadata tab located, attempting to click...")
+    basic_info_tab.click()
+    print("Filling Metadata...")
+    
     time.sleep(10)  # Sleep for 10 seconds
+    
 
 try:
     # Get email and password from Login.txt
@@ -166,6 +178,9 @@ try:
     
     # Call the function to fill basic info
     basic_info(driver, title)
+    
+    # Call the function to fill Metadata
+    meta_data(driver, artwork)
 
 except Exception as e:
     print(f"An error occurred: {e}")
