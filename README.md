@@ -1,4 +1,4 @@
-# BeatStars Single Click Upload Automation
+# Single Click Upload Automation
 
 This repository contains a Python project to automate the process of uploading tracks to BeatStars. The project utilizes Selenium WebDriver to interact with the BeatStars website, handling tasks such as logging in, uploading .wav files, and filling in basic track information. It now includes a GUI built with Tkinter for a more user-friendly experience.
 
