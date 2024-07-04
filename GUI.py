@@ -1,12 +1,17 @@
-import tkinter as tk
-from tkinterdnd2 import TkinterDnD, DND_FILES
-from tkinter import ttk
-import singleClickUpload  # Import the upload script
+import tkinter as tk  # Standard Tkinter library for creating GUI applications
+from tkinterdnd2 import TkinterDnD, DND_FILES  # Extension of Tkinter for drag and drop functionality
+from tkinter import ttk  # Tkinter themed widgets for modern look and feel
+from PIL import Image, ImageTk  # Python Imaging Library for handling and displaying images
+from io import BytesIO  # Allows operations on bytes objects, used here to handle image data
+import requests  # Import the requests module to handle HTTP requests
+import singleClickUpload  # Import a custom script for handling file uploads
+import getArtwork  # Import the entire getArtwork module for fetching image URLs and API keys
 
 # Initialize global variables for file paths
 wav_file_path = ""
 stem_file_path = ""
 track_title_name = ""
+image_index = -1  # To keep track of the current image index
 
 def drop_wav(event):
     global wav_file_path
@@ -30,9 +35,46 @@ def upload_files():
 def setup_single_Click():
     single_Click = TkinterDnD.Tk()
     single_Click.configure(bg='#EB0000')  # Set the background color of the main single_Click
-    single_Click.geometry("300x500")  # Set the size of the single_Click to 300x500 pixels
+    single_Click.geometry("400x700")  # Set the size of the single_Click to 400x700 pixels
     single_Click.title("Beat Stars Single Click")  # Set the title of the single_Click
     return single_Click
+
+def fetch_and_display_image(url=None):
+    try:
+        global image_index
+        if url:
+            getArtwork.image_urls.append(url)
+            image_index += 1
+        elif image_index == -1:
+            url = getArtwork.fetch_and_store_image()
+            image_index = 0
+        else:
+            url = getArtwork.image_urls[image_index]
+
+        # Load the image directly from the URL
+        img_data = requests.get(url).content
+        img = Image.open(BytesIO(img_data))
+        img = img.resize((250, 250), Image.LANCZOS)
+        img = ImageTk.PhotoImage(img)
+        artwork_display.config(image=img)
+        artwork_display.image = img
+    except Exception as e:
+        print(f"Error fetching or displaying image: {e}")
+
+def fetch_previous_image():
+    global image_index
+    if image_index > 0:
+        image_index -= 1
+        fetch_and_display_image()
+
+def fetch_next_image():
+    global image_index
+    if image_index < len(getArtwork.image_urls) - 1:
+        image_index += 1
+        fetch_and_display_image()
+    else:
+        new_url = getArtwork.fetch_and_store_image()
+        fetch_and_display_image(new_url)
 
 def create_widgets(single_Click):
     # Add a title label with the text "Single click upload" and a bold font
@@ -77,7 +119,25 @@ def create_widgets(single_Click):
     # Add an entry field where users can type the track title
     track_title_entry = tk.Entry(track_title_frame, font=('Ariel', 11), bg='lightgrey', fg='black')
     track_title_entry.pack(side=tk.LEFT)  # Place the entry field to the right of the label
+    
+    # Add a label to display artwork
+    global artwork_display
+    artwork_display = tk.Label(single_Click, text="Artwork will be displayed here", font=('Ariel', 11), bg='#EB0000', fg='white')
+    artwork_display.pack(padx=20, pady=10)  # Add some space around the label
 
+    # Add Previous and Next buttons
+    button_frame = tk.Frame(single_Click, bg='#EB0000')
+    button_frame.pack(pady=10)
+
+    prev_button = ttk.Button(button_frame, text="Previous", style="RoundedButton.TButton", command=fetch_previous_image)
+    prev_button.pack(side=tk.LEFT, padx=10)
+
+    next_button = ttk.Button(button_frame, text="Next", style="RoundedButton.TButton", command=fetch_next_image)
+    next_button.pack(side=tk.LEFT, padx=10)
+
+    # Fetch and display the first image
+    fetch_and_display_image()
+    
     # Create a style for the rounded button
     style = ttk.Style()
     style.configure("RoundedButton.TButton", font=('Ariel', 11), background='#EB0000', foreground='black', borderwidth=1, relief="solid")
