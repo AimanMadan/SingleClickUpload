@@ -34,8 +34,7 @@ pip install requests
 
 ### Download Chrome WebDriver:
 
-- Download the Chrome WebDriver from [here](![image](https://github.com/user-attachments/assets/8cb2a4b9-eb57-4424-89eb-60fb22bb9a30)
-).
+- Download the Chrome WebDriver from [here](![image](https://github.com/user-attachments/assets/8cb2a4b9-eb57-4424-89eb-60fb22bb9a30).
 - Ensure the `chromedriver.exe` is placed in the same directory as the script or specify its path in the script.
 
 ### Prepare Credentials:
