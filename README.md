@@ -86,8 +86,7 @@ python main.py
 ## Important Notes
 
 - Ensure the correct paths are specified for `chromedriver.exe` and the files to be uploaded.
-- The script uses explicit waits to handle page loading times. Adjust these waits if necessary.
-- The current implementation includes `time.sleep` for some waits. A more robust solution with explicit waits is recommended for production use.
+- The current implementation includes `time.sleep` for upload waits. A more robust solution with explicit waits is recommended for production use.
 
 ## Contributions
 
