@@ -1,4 +1,4 @@
-Here's an updated `README.md` file that includes the additional details you provided:
+Here's the updated `README.md` file with the included section to showcase the GUI:
 
 ---
 
@@ -81,10 +81,7 @@ python main.py
 
 ## Showcase
 
-![GUI Screenshot](![Untitled](https://github.com/user-attachments/assets/7cfa8e8a-3e84-4945-bd73-5dde954a411f)
-)
-
-*Replace the placeholder text with the actual path to your screenshot of the GUI.*
+![GUI Screenshot](image.png)
 
 ## Important Notes
 
@@ -102,4 +99,4 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 ---
 
-Replace `path/to/your/screenshot.png` with the actual path to your screenshot image file. This section will display the GUI image in the README.
+The image of the GUI will be displayed in the "Showcase" section when the `README.md` file is viewed on GitHub or any other markdown viewer. Make sure to include the `image.png` file in the root directory of your project repository.
