@@ -1,20 +1,19 @@
-import time
 import os
 import glob
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
-# Function to get .wav, stem files, and title from provided paths
-def get_files(wav_path, stem_path, title_entered, get_artwork):
+# Function to get .wav, stem files, title, and artwork from provided paths
+def get_files(wav_path, stem_path, title_entered, artwork_path):
     wav = [wav_path]
     stems = [stem_path] if stem_path else []
     track_title = title_entered if title_entered else os.path.splitext(os.path.basename(wav[0]))[0] if wav else None
-    artwork = [get_artwork]
-    return wav, stems, track_title
+    artwork = artwork_path
+    return wav, stems, track_title, artwork
 
 # Function to get email and password from a text file
 def get_credentials(filename):
@@ -29,7 +28,7 @@ def get_credentials(filename):
     return email, password
 
 # Function to log into Beatstars
-def beatstars_sign_in(driver, email, password): # You might not need it
+def beatstars_sign_in(driver, email, password):
     # Open BeatStars website
     driver.get("https://www.beatstars.com/dashboard")
 
@@ -39,7 +38,7 @@ def beatstars_sign_in(driver, email, password): # You might not need it
     SINCE COOKIES ARE CREATED THIS TIME YOU DO NOT NEED TO KEEP SIGNING IN
     DOING TWO STEP VERIFICATION
     JUST DO IT ONCE WITH YOUR BROWSER!
-    '''     
+    
     
     # Wait for the email input to be present and visible, then enter email
     email_input = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@placeholder='Type your email or username']")))
@@ -78,10 +77,10 @@ def beatstars_sign_in(driver, email, password): # You might not need it
     print("Continue button located, attempting to click...")
     # Click the "Continue" button
     continue_button.click()
+'''
 
 #Upload a track with the attached files (Must have .wav at least)
 def upload_track(driver, wav, stems):
-    
     wait = WebDriverWait(driver, 10)
     
     # Wait for the "Create +" button to be clickable using the provided XPath
@@ -131,18 +130,19 @@ def upload_track(driver, wav, stems):
     # Sleep to wait for the upload to finish
     print("Waiting for the upload process to complete...")
     time.sleep(20)  # Sleep for 20 seconds
+    print("Basic info...")
 
 # Function to add basic info
 def basic_info(driver, track_title, artwork):
     wait = WebDriverWait(driver, 10)
     
-    # Use the full XPath to locate the "Basic Info" tab
+    # Locate the "Basic Info" tab
     basic_info_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/mat-tab-group/mat-tab-header/div/div/div/div[2]")))
     print("Basic Info tab located, attempting to click...")
     basic_info_tab.click()
     print("Filling Basic Info...")
     
-    # Use the full XPath to locate the track_title input
+    # Locate the track_title input
     track_title_input = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[2]/div/div[1]/bs-text-input/input")))
     print(f"Located track_title input with placeholder: {track_title_input.get_attribute('placeholder')}")
     
@@ -153,34 +153,35 @@ def basic_info(driver, track_title, artwork):
     track_title_input.send_keys(track_title)
     print(f"Entered track title: {track_title}")
     
-    # Use the full XPath to locate the "Edit Artwork" button
-    edit_Artwork_button = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[1]/bs-upload-button/bs-artwork-composed-button/bs-menu-more-options/div/bs-square-button/button")))
+    # Locate the "Edit Artwork" button
+    edit_artwork_button = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[1]/bs-upload-button/bs-artwork-composed-button/bs-menu-more-options/div/bs-square-button/button")))
     print("Edit Artwork button located, attempting to click...")
-    edit_Artwork_button.click()
-    print("Edit Artwork Button Clicked Info...")
+    edit_artwork_button.click()
+    print("Edit Artwork Button Clicked...")
+
+    # Wait for the artwork upload button to be clickable
+    upload_artwork_button = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[2]/div/div/div/bs-artwork-option-upload/bs-external-action-option/button")))
+    print("Artwork upload input located, attempting to upload file...")
+    # Click the "Upload" button
+    upload_artwork_button.click()
     
+    # Wait for the "Drag & Drop" input to be present using the provided XPath
+    drag_and_drop_artwork = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[2]/div/mat-dialog-container/ng-component/mat-dialog-content/mat-tab-group/div/mat-tab-body[1]/div/div/div[1]/div[2]/div/button")))
+    print("Drag & Drop input for artwork located, attempting to upload file...")
     
+    # Upload the artwork file
+    drag_and_drop_artwork.send_keys(artwork)
+    print(f"Uploaded artwork file: {artwork}")
     
     time.sleep(10)  # Sleep for 10 seconds
 
-'''# Function to add Metadata
-def fill_Metadata(driver, tags):
-    wait = WebDriverWait(driver, 10)
-    
-    # Use the full XPath to locate the "Metadata" tab
-    metadata_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/mat-tab-group/mat-tab-header/div/div/div/div[3]")))
-    print("Metadata tab located, attempting to click...")
-    metadata_tab.click()
-    print("Filling Metadata...")
-    '''
-    
-def run_script(wav_path, stem_path, title_entered):
+def run_script(wav_path, stem_path, title_entered, artwork_path):
     try:
         # Get email and password from Login.txt
         email, password = get_credentials('Login.txt')
         
-        # Get .wav, stem, and track_title from the provided file paths
-        wav, stems, track_title = get_files(wav_path, stem_path, title_entered)
+        # Get .wav, stem, track_title, and artwork from the provided file paths
+        wav, stems, track_title, artwork = get_files(wav_path, stem_path, title_entered, artwork_path)
         
         # Setup Chrome WebDriver with headless option
         options = webdriver.ChromeOptions()
@@ -194,7 +195,7 @@ def run_script(wav_path, stem_path, title_entered):
 
         # Setup Chrome WebDriver
         service = Service(executable_path="chromedriver.exe")
-        driver = webdriver.Chrome(service=service)#, options=options)
+        driver = webdriver.Chrome(service=service, options=options)
         
         # Call the login function
         beatstars_sign_in(driver, email, password)
@@ -203,10 +204,10 @@ def run_script(wav_path, stem_path, title_entered):
         upload_track(driver, wav, stems)
         
         # Call the function to fill basic info
-        basic_info(driver, track_title)
+        basic_info(driver, track_title, artwork)
         
     except Exception as e:
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    run_script('path_to_wav', 'path_to_stem', 'track_title')
+    run_script('path_to_wav', 'path_to_stem', 'track_title', 'path_to_artwork')
