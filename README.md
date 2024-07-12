@@ -1,4 +1,4 @@
-Here's the updated `README.md` file with the included section to showcase the GUI:
+Here's the updated `README.md` file with the included section to showcase the GUI using the provided image URL:
 
 ---
 
@@ -34,7 +34,7 @@ pip install requests
 
 ### Download Chrome WebDriver:
 
-- Download the Chrome WebDriver from [here](![image](https://github.com/user-attachments/assets/8cb2a4b9-eb57-4424-89eb-60fb22bb9a30).
+- Download the Chrome WebDriver from [here](https://sites.google.com/a/chromium.org/chromedriver/downloads).
 - Ensure the `chromedriver.exe` is placed in the same directory as the script or specify its path in the script.
 
 ### Prepare Credentials:
@@ -81,7 +81,7 @@ python main.py
 
 ## Showcase
 
-![GUI Screenshot](image.png)
+![GUI Screenshot](https://github.com/user-attachments/assets/8cb2a4b9-eb57-4424-89eb-60fb22bb9a30)
 
 ## Important Notes
 
@@ -97,6 +97,3 @@ Contributions are welcome! Please fork this repository and submit a pull request
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
----
-
-The image of the GUI will be displayed in the "Showcase" section when the `README.md` file is viewed on GitHub or any other markdown viewer. Make sure to include the `image.png` file in the root directory of your project repository.
