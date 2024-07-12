@@ -2,7 +2,7 @@ Here's the updated `README.md` file with the included section to showcase the GU
 
 ---
 
-# BeatStars Single Click Upload Automation
+# Single Click Upload 
 
 This repository contains a Python script to automate the process of uploading tracks to BeatStars. The script utilizes Selenium WebDriver to interact with the BeatStars website, handling tasks such as logging in, uploading .wav files, filling in basic track information, and setting artwork.
 
