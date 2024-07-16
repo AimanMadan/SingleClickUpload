@@ -129,7 +129,7 @@ def upload_track(driver, wav, stems):
     
     # Sleep to wait for the upload to finish
     print("Waiting for the upload process to complete...")
-    time.sleep(20)  # Sleep for 20 seconds
+    time.sleep(50)  # Sleep for 20 seconds
     print("Basic info...")
 
 # Function to add basic info
@@ -161,19 +161,25 @@ def basic_info(driver, track_title, artwork):
 
     # Wait for the artwork upload button to be clickable
     upload_artwork_button = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[2]/div/div/div/bs-artwork-option-upload/bs-external-action-option/button")))
-    print("Artwork upload input located, attempting to upload file...")
+    print("Artwork upload input located, attempting to click...")
     # Click the "Upload" button
     upload_artwork_button.click()
     
     # Wait for the "Drag & Drop" input to be present using the provided XPath
-    drag_and_drop_artwork = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[2]/div/mat-dialog-container/ng-component/mat-dialog-content/mat-tab-group/div/mat-tab-body[1]/div/div/div[1]/div[2]/div/button")))
+    drag_and_drop_artwork = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='uppy-drag-drop']/div/button/input")))
     print("Drag & Drop input for artwork located, attempting to upload file...")
     
     # Upload the artwork file
     drag_and_drop_artwork.send_keys(artwork)
     print(f"Uploaded artwork file: {artwork}")
     
-    time.sleep(10)  # Sleep for 10 seconds
+    # Wait for the Save Crop button to be clickable
+    save_crop_button = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[2]/div/mat-dialog-container/ng-component/mat-dialog-content/bs-crop-image/div[2]/div[2]/bs-square-button/button")))
+    print("Save Crop button located , attempting to click...")
+    # Click the "Upload" button
+    save_crop_button.click()
+    
+    time.sleep(20)  # Sleep for 10 seconds
 
 def run_script(wav_path, stem_path, title_entered, artwork_path):
     try:
@@ -185,8 +191,8 @@ def run_script(wav_path, stem_path, title_entered, artwork_path):
         
         # Setup Chrome WebDriver with headless option
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')  # Necessary for Windows
+        #options.add_argument('--headless')
+        #options.add_argument('--disable-gpu')  # Necessary for Windows
 
         # Create a custom user data directory
         user_data_dir = os.path.join(os.getcwd(), 'user_data')
