@@ -123,27 +123,32 @@ def upload_track(driver, wav, stems):
 
         # Upload the stem file
         drag_and_drop_input_stems.send_keys(stems[0])
+        time.sleep(50)  # Sleep for 50 seconds
         print(f"Uploaded stems file: {stems[0]}")
     else:
         print("No stems found. Skipping stem upload.")
     
     # Sleep to wait for the upload to finish
     print("Waiting for the upload process to complete...")
-    time.sleep(50)  # Sleep for 20 seconds
-    print("Basic info...")
+    
+    # Wait for 5 intervals of 10 seconds each
+    for _ in range(5):  
+        time.sleep(10)
+        print("UPLOADING...")
+    print("Upload process completed.")
 
 # Function to add basic info
 def basic_info(driver, track_title, artwork):
     wait = WebDriverWait(driver, 10)
     
     # Locate the "Basic Info" tab
-    basic_info_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/mat-tab-group/mat-tab-header/div/div/div/div[2]")))
+    basic_info_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/mat-tab-group/mat-tab-header/div/div/div/div[2]")))
     print("Basic Info tab located, attempting to click...")
     basic_info_tab.click()
     print("Filling Basic Info...")
     
     # Locate the track_title input
-    track_title_input = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[2]/div/div[1]/bs-text-input/input")))
+    track_title_input = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/studio-root/div/ng-component/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[2]/div/div[1]/bs-text-input/input")))
     print(f"Located track_title input with placeholder: {track_title_input.get_attribute('placeholder')}")
     
     # Clear the input field before entering text
@@ -154,7 +159,7 @@ def basic_info(driver, track_title, artwork):
     print(f"Entered track title: {track_title}")
     
     # Locate the "Edit Artwork" button
-    edit_artwork_button = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[1]/bs-upload-button/bs-artwork-composed-button/bs-menu-more-options/div/bs-square-button/button")))
+    edit_artwork_button = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/studio-root/div/ng-component/ng-component/studio-page-container/div/form/studio-inventory-form-holder/div/studio-panel/div/studio-wrapper-track-basic-info/studio-inventory-form-basic-info/div/div[1]/bs-upload-button/bs-artwork-composed-button/bs-menu-more-options/div/bs-square-button/button")))
     print("Edit Artwork button located, attempting to click...")
     edit_artwork_button.click()
     print("Edit Artwork Button Clicked...")
@@ -179,7 +184,9 @@ def basic_info(driver, track_title, artwork):
     # Click the "Upload" button
     save_crop_button.click()
     
-    time.sleep(20)  # Sleep for 10 seconds
+    time.sleep(50)  # Sleep for 50 seconds
+    
+    print("Basic Info filled successfully...")
 
 def run_script(wav_path, stem_path, title_entered, artwork_path):
     try:
